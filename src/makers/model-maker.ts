@@ -34,19 +34,21 @@ export async function modelMaker(
   });
 
   if (railsFile.module.length > 0) {
-    return models
-      .filter(
-        model =>
-          model.module === railsFile.module &&
-          possibleModelNames.indexOf(model.possibleModelNames()[0]) >= 0
-      )
-      .map(modelToChecked);
+    const filtered = models.filter((model) => {
+      // return model.module === railsFile.module && possibleModelNames.indexOf(model.possibleModelNames()[0]) >= 0
+      return possibleModelNames.indexOf(model.possibleModelNames()[0]) >= 0
+    })
+
+    const mapped = filtered.map(modelToChecked);
+
+    return mapped;
   }
 
-  return possibleModelNames
+  const foundModels = possibleModelNames
     .reduce<RailsFile[]>((acc, possibleModelName) => {
       const parts = possibleModelName.split('_');
 
+      // First, try to find models with matching module and model parts
       for (let i = -1; Math.abs(i) <= parts.length; --i) {
         const modulePart = parts.slice(0, i).join('_');
         const modelPart = parts.slice(i).join('_');
@@ -58,9 +60,26 @@ export async function modelMaker(
         if (model) acc.push(model);
       }
 
+      // If no models found yet, try to find base models without namespace
+      // This handles cases like Admin::ModelsController -> Model
+      if (acc.length === 0) {
+        const baseModelName = possibleModelName.split('_').pop(); // Get the last part (the actual model name)
+        if (baseModelName) {
+          const baseModel = models.find(
+            model =>
+              model.module === '' &&
+              model.possibleModelNames()[0] === baseModelName
+          );
+          if (baseModel) acc.push(baseModel);
+        }
+      }
+
       return acc;
-    }, [])
-    .map(modelToChecked);
+    }, []);
+
+  if (foundModels.length > 0) {
+    return foundModels.map(modelToChecked);
+  }
 
   const singularName = singularize(justName(railsFile));
   let location = path.join(
