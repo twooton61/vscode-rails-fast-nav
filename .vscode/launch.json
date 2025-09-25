@@ -14,7 +14,10 @@
       "stopOnEntry": false,
       "sourceMaps": true,
       "outFiles": ["${workspaceRoot}/dist/**/*.js"],
-      "preLaunchTask": "npm: webpack"
+      "preLaunchTask": "npm: webpack",
+      "env": {
+        "NODE_OPTIONS": "--openssl-legacy-provider"
+      }
     },
     {
       "name": "Launch Tests",
