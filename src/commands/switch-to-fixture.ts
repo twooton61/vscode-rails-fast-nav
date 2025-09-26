@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import { getRailsContext } from '../rails-context';
 import { getSwitchesFromRules, checkSwitchFiles } from '../switches';
-import { fixtureMaker } from '../makers';
+import { fixtureMaker, factoryMaker } from '../makers';
 import { openFile, showPicker, showCreateFile } from './util';
 
 export async function switchToFixture() {
   return getRailsContext(async function(railsFile, workspace) {
     const switchFiles = await getSwitchesFromRules(
-      [fixtureMaker],
+      [factoryMaker, fixtureMaker],
       railsFile,
       false
     );
@@ -17,7 +17,7 @@ export async function switchToFixture() {
       case 0: {
         if (switchFiles.length === 0) {
           return await vscode.window.showInformationMessage(
-            'No fixture found for this file'
+            'No fixture or factory found for this file'
           );
         } else {
           return await showCreateFile(switchFiles[0].filename);

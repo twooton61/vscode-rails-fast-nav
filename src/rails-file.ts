@@ -75,6 +75,7 @@ export class RailsFile {
     if (this.isModel()) return [this.withoutExt];
     if (this.isView()) return [singularize(path.basename(this.dirname))];
     if (this.isFixture()) return [singularize(this.withoutExt)];
+    if (this.isFactory()) return [singularize(this.withoutExt)];
 
     const parts = this.withoutExt.split('_');
 
@@ -103,6 +104,10 @@ export class RailsFile {
 
       if (this.dirname.endsWith('fixtures')) {
         return 'fixture';
+      }
+
+      if (this.dirname.endsWith('factories')) {
+        return 'factory';
       }
 
       if (this._parsed.ext === '.rb') {
@@ -145,6 +150,9 @@ export class RailsFile {
   }
   isFixture() {
     return this.fileType === 'fixture';
+  }
+  isFactory() {
+    return this.fileType === 'factory';
   }
 }
 
