@@ -17,7 +17,7 @@ export function requestSpecMaker(
   const requestSpecPath = controllerPath
     .replace(/^controllers\//, '')
     .replace(/_controller\.rb$/, '_requests_spec.rb')
-    .replace(/admin\//, '');
+    .replace(/\/?.*\//, '');
 
   return [
     {
