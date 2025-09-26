@@ -1,6 +1,7 @@
 import { SwitchFile } from '../types';
 import { RailsFile } from '../rails-file';
 import { RailsWorkspace, relativeToAppDir } from '../rails-workspace';
+import { singularEntityName } from '../path-utils';
 import * as path from 'path';
 
 export function requestSpecMaker(
@@ -13,11 +14,8 @@ export function requestSpecMaker(
   }
 
   const controllerPath = relativeToAppDir(workspace, railsFile.filename);
-  // Convert controllers/some_controller.rb to some_request_spec.rb
-  const requestSpecPath = controllerPath
-    .replace(/^controllers\//, '')
-    .replace(/_controller\.rb$/, '_requests_spec.rb')
-    .replace(/\/?.*\//, '');
+  const singularEntity = singularEntityName(controllerPath);
+  const requestSpecPath = singularEntity + '_requests_spec.rb';
 
   return [
     {
