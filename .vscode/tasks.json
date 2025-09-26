@@ -48,7 +48,7 @@
         {
             "label": "Install Extension",
             "type": "shell",
-            "command": "code --install-extension rails-fast-nav-dev.vsix",
+            "command": "code --install-extension rails-fast-nav-dev.vsix --force",
             "options": {
                 "env": {
                     "NODE_OPTIONS": "--openssl-legacy-provider"
@@ -66,7 +66,7 @@
         {
             "label": "Package and Install Extension",
             "type": "shell",
-            "command": "npm run vscode:prepublish && npx vsce package -o rails-fast-nav-dev.vsix && code --install-extension rails-fast-nav-dev.vsix",
+            "command": "npm run vscode:prepublish && npx vsce package -o rails-fast-nav-dev.vsix && code --install-extension rails-fast-nav-dev.vsix --force",
             "options": {
                 "env": {
                     "NODE_OPTIONS": "--openssl-legacy-provider"
